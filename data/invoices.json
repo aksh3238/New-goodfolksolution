@@ -1,0 +1,72 @@
+[
+  {
+    "id": "inv_1",
+    "invoiceNumber": "GF-2026-001",
+    "clientId": "cli_1",
+    "clientName": "Rahul Verma",
+    "company": "Kaizen Botanics Pvt Ltd",
+    "clientEmail": "rahul@kaizenbotanics.com",
+    "clientMobile": "+91 98201 44521",
+    "projectId": "proj_1",
+    "projectName": "Botanica Skincare Identity & Packaging System",
+    "amount": 185000,
+    "paidAmount": 92500,
+    "balanceAmount": 92500,
+    "issueDate": "2026-01-15",
+    "dueDate": "2026-03-30",
+    "status": "partial",
+    "items": [
+      { "description": "Brand Identity Guidelines & Wordmark System", "amount": 65000 },
+      { "description": "4-SKU Primary & Secondary Packaging Dielines", "amount": 85000 },
+      { "description": "Production Handover & E-commerce Visual Assets", "amount": 35000 }
+    ],
+    "notes": "50% Advance received on kickoff. Balance due upon delivery of final print dielines.",
+    "createdAt": "2026-01-15T11:30:00.000Z"
+  },
+  {
+    "id": "inv_2",
+    "invoiceNumber": "GF-2026-002",
+    "clientId": "cli_2",
+    "clientName": "Meera Sen",
+    "company": "Verve Roasters LLP",
+    "clientEmail": "meera@ververoasters.in",
+    "clientMobile": "+91 98450 11982",
+    "projectId": "proj_2",
+    "projectName": "Artisanal Coffee Packaging & Cafe Collateral",
+    "amount": 140000,
+    "paidAmount": 140000,
+    "balanceAmount": 0,
+    "issueDate": "2026-01-20",
+    "dueDate": "2026-02-28",
+    "status": "paid",
+    "items": [
+      { "description": "Retail Coffee Pouch Packaging (250g & 1kg)", "amount": 80000 },
+      { "description": "Takeaway Cup Graphics, Menu, and Brand Collateral", "amount": 60000 }
+    ],
+    "notes": "Payment fully cleared via HDFC IMPS bank transfer.",
+    "createdAt": "2026-01-20T16:00:00.000Z"
+  },
+  {
+    "id": "inv_3",
+    "invoiceNumber": "GF-2026-003",
+    "clientId": "cli_3",
+    "clientName": "Karan Malhotra",
+    "company": "Nexa Mobility Solutions",
+    "clientEmail": "karan@nexamobility.io",
+    "clientMobile": "+91 98112 77410",
+    "projectId": "proj_3",
+    "projectName": "Paid Social Acquisition Campaign Sprints",
+    "amount": 95000,
+    "paidAmount": 50000,
+    "balanceAmount": 45000,
+    "issueDate": "2026-02-05",
+    "dueDate": "2026-03-05",
+    "status": "partial",
+    "items": [
+      { "description": "Sprint 1: 12 Direct-Response Motion Ad Creatives", "amount": 65000 },
+      { "description": "Sprint 2: Creative Variations & Hook Testing Matrix", "amount": 30000 }
+    ],
+    "notes": "Advance ₹50,000 received via UPI. Balance due on completion of Sprint 2.",
+    "createdAt": "2026-02-05T11:00:00.000Z"
+  }
+]

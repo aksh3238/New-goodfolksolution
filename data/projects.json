@@ -1,0 +1,57 @@
+[
+  {
+    "id": "proj_1",
+    "clientId": "cli_1",
+    "clientName": "Rahul Verma",
+    "company": "Kaizen Botanics Pvt Ltd",
+    "projectName": "Botanica Skincare Identity & Packaging System",
+    "service": "Branding & Packaging",
+    "startDate": "2026-01-15",
+    "deadline": "2026-03-30",
+    "status": "in_progress",
+    "agreedPrice": 185000,
+    "deliverables": [
+      "Brand Guidelines & Typography System",
+      "Primary & Secondary Packaging Dielines for 4 SKUs",
+      "Screen-printed amber bottle artwork",
+      "E-commerce launch banner suite"
+    ],
+    "createdAt": "2026-01-15T11:00:00.000Z"
+  },
+  {
+    "id": "proj_2",
+    "clientId": "cli_2",
+    "clientName": "Meera Sen",
+    "company": "Verve Roasters LLP",
+    "projectName": "Artisanal Coffee Packaging & Cafe Collateral",
+    "service": "Branding & Packaging",
+    "startDate": "2026-01-20",
+    "deadline": "2026-02-28",
+    "status": "completed",
+    "agreedPrice": 140000,
+    "deliverables": [
+      "250g & 1kg Retail Pouch Foil-Stamping Design",
+      "Origin Color-Coding Labels",
+      "Takeaway Cup Graphics & Menu Boards"
+    ],
+    "createdAt": "2026-01-20T15:00:00.000Z"
+  },
+  {
+    "id": "proj_3",
+    "clientId": "cli_3",
+    "clientName": "Karan Malhotra",
+    "company": "Nexa Mobility Solutions",
+    "projectName": "Paid Social Acquisition Campaign Sprints",
+    "service": "Performance Marketing Creatives",
+    "startDate": "2026-02-05",
+    "deadline": "2026-03-15",
+    "status": "in_progress",
+    "agreedPrice": 95000,
+    "deliverables": [
+      "12 Motion Ad Variations (1:1 & 9:16)",
+      "Direct-response typography hooks",
+      "Creative testing framework & asset kit"
+    ],
+    "createdAt": "2026-02-05T10:30:00.000Z"
+  }
+]

@@ -9,6 +9,10 @@ import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { TermsPage } from './pages/TermsPage';
+import { AdminLoginPage } from './pages/admin/AdminLoginPage';
+import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
+import { ClientPaymentPage } from './pages/ClientPaymentPage';
+import { adminAuth } from './services/adminService';
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState<string>(() => {
@@ -16,17 +20,18 @@ export default function App() {
     return path || '/';
   });
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() => adminAuth.isAuthenticated());
 
   useEffect(() => {
     const handlePopState = () => {
       setCurrentPath(window.location.pathname || '/');
+      setIsAdminLoggedIn(adminAuth.isAuthenticated());
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   const handleNavigate = (path: string) => {
-    // Extract pathname if path contains hash
     const [pathname, hash] = path.split('#');
     if (window.location.pathname !== pathname) {
       window.history.pushState({}, '', path);
@@ -44,6 +49,33 @@ export default function App() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+
+  const handleAdminLogout = async () => {
+    adminAuth.clearToken();
+    setIsAdminLoggedIn(false);
+    handleNavigate('/admin');
+  };
+
+  // Dedicated Admin routing: keeps all admin pages private and separate from public website
+  if (currentPath.startsWith('/admin')) {
+    if (!isAdminLoggedIn) {
+      return (
+        <AdminLoginPage
+          onLoginSuccess={() => {
+            setIsAdminLoggedIn(true);
+            handleNavigate('/admin');
+          }}
+          onNavigateHome={() => handleNavigate('/')}
+        />
+      );
+    }
+    return (
+      <AdminDashboardPage
+        onLogout={handleAdminLogout}
+        onNavigateHome={() => handleNavigate('/')}
+      />
+    );
+  }
 
   const renderCurrentPage = () => {
     switch (currentPath) {
@@ -86,6 +118,9 @@ export default function App() {
         return <PrivacyPolicyPage onNavigate={handleNavigate} />;
       case '/terms':
         return <TermsPage onNavigate={handleNavigate} />;
+      case '/pay':
+      case '/payment':
+        return <ClientPaymentPage onNavigateHome={() => handleNavigate('/')} />;
       default:
         return (
           <HomePage
@@ -98,7 +133,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-[#242832] font-sans antialiased">
-      {/* Global Header */}
+      {/* Global Header for Public Website */}
       <Header
         currentPath={currentPath}
         onNavigate={handleNavigate}
@@ -108,7 +143,7 @@ export default function App() {
       {/* Main Page Content */}
       <main className="flex-1 w-full">{renderCurrentPage()}</main>
 
-      {/* Global Footer */}
+      {/* Global Footer for Public Website */}
       <Footer
         onNavigate={handleNavigate}
         onOpenContactModal={() => setIsContactModalOpen(true)}

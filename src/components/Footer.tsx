@@ -87,6 +87,14 @@ export const Footer: React.FC<FooterProps> = ({
                   Contact
                 </button>
               </li>
+              <li>
+                <button
+                  onClick={() => navigateTo('/pay')}
+                  className="hover:text-[#ED650B] text-white/90 font-medium transition-colors flex items-center gap-1"
+                >
+                  <span>Pay Invoice (UPI)</span>
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -192,7 +200,7 @@ export const Footer: React.FC<FooterProps> = ({
           <div>
             &copy; 2026 Goodfolk Solution. All rights reserved.
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 sm:gap-6">
             <button
               onClick={() => navigateTo('/privacy')}
               className="hover:text-white transition-colors"
@@ -205,6 +213,14 @@ export const Footer: React.FC<FooterProps> = ({
               className="hover:text-white transition-colors"
             >
               Terms & Conditions
+            </button>
+            <span className="text-white/20">|</span>
+            <button
+              onClick={() => navigateTo('/admin')}
+              className="hover:text-white transition-colors opacity-75 hover:opacity-100 flex items-center gap-1"
+              title="Goodfolk Internal Management Portal"
+            >
+              Staff Portal
             </button>
           </div>
         </div>

@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "GF-MVCOX9T4-RMV",
+    "name": "Priya Nair",
+    "email": "priya@nairorganics.com",
+    "company": "Nair Organics",
+    "mobile": "+91 98401 23456",
+    "service": "Branding & Packaging",
+    "budget": "Not specified",
+    "deadline": "Not specified",
+    "details": "Need complete brand identity, logo, and cosmetic packaging for new line of hair oils.",
+    "createdAt": "2026-10-17T17:48:39.784Z",
+    "status": "new",
+    "assignedTo": "Akshay (Lead Review)"
+  }
+]

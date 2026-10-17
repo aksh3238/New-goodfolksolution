@@ -1,0 +1,29 @@
+[
+  {
+    "id": "cli_1",
+    "name": "Rahul Verma",
+    "company": "Kaizen Botanics Pvt Ltd",
+    "email": "rahul@kaizenbotanics.com",
+    "mobile": "+91 98201 44521",
+    "notes": "Premium organic skincare range launching Q2.",
+    "createdAt": "2026-01-10T10:00:00.000Z"
+  },
+  {
+    "id": "cli_2",
+    "name": "Meera Sen",
+    "company": "Verve Roasters LLP",
+    "email": "meera@ververoasters.in",
+    "mobile": "+91 98450 11982",
+    "notes": "Specialty micro-roaster in Bangalore.",
+    "createdAt": "2026-01-18T14:30:00.000Z"
+  },
+  {
+    "id": "cli_3",
+    "name": "Karan Malhotra",
+    "company": "Nexa Mobility Solutions",
+    "email": "karan@nexamobility.io",
+    "mobile": "+91 98112 77410",
+    "notes": "Fintech & EV mobility platform.",
+    "createdAt": "2026-02-01T09:15:00.000Z"
+  }
+]
