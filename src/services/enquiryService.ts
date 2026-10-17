@@ -17,9 +17,11 @@ export interface EnquiryResponse {
   success: boolean;
   message: string;
   enquiryId?: string;
-  deliveryMethod?: 'server-api' | 'local-store';
+  deliveryMethod?: 'google-sheets';
   integrationNote?: string;
 }
+
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLec-O8zdz_Uq40uzR1a8YCD_-jELUtckCf7EiAgzMDtibOJI5DIPAx0Lfqk1tPld9/exec';
 
 export const submitEnquiry = async (data: EnquiryData): Promise<EnquiryResponse> => {
   const enquiryPayload: EnquiryData = {
@@ -29,49 +31,28 @@ export const submitEnquiry = async (data: EnquiryData): Promise<EnquiryResponse>
   };
 
   try {
-    // Attempt real server API submission first
-    const response = await fetch('/api/enquiries', {
+    await fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
+      mode: 'no-cors',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'text/plain;charset=utf-8',
       },
       body: JSON.stringify(enquiryPayload),
     });
 
-    if (response.ok) {
-      const resJson = await response.json();
-      return {
-        success: true,
-        message: resJson.message || 'Your enquiry has been received successfully! Our team will review your brief within 24 hours.',
-        enquiryId: resJson.enquiryId || enquiryPayload.id,
-        deliveryMethod: 'server-api',
-        integrationNote: resJson.integrationNote,
-      };
-    }
-  } catch (err) {
-    // Server route may be unmounted or in client-only preview mode. Fall back to secure local persistence.
-    console.warn('API route /api/enquiries not reachable; using client-side lead vault fallback:', err);
-  }
-
-  // Fallback: Save to browser storage so submission is never lost
-  try {
-    const existing = JSON.parse(localStorage.getItem('goodfolk_enquiries') || '[]');
-    existing.unshift(enquiryPayload);
-    localStorage.setItem('goodfolk_enquiries', JSON.stringify(existing));
-
     return {
       success: true,
-      message: 'Enquiry received and logged successfully! We have recorded your project brief.',
+      message: 'Thank you! Your enquiry has been submitted.',
       enquiryId: enquiryPayload.id,
-      deliveryMethod: 'local-store',
-      integrationNote:
-        'Enquiry saved in active session storage. Production email relay (SMTP / Resend API to akshay@goodfolksolution.in) can be configured via environment variables for direct inbox delivery.',
+      deliveryMethod: 'google-sheets',
+      integrationNote: 'Submission sent to Google Sheets.',
     };
-  } catch (storageErr) {
-    console.error('Failed to store enquiry:', storageErr);
+  } catch (error) {
+    console.error('Google Sheets submission failed:', error);
+
     return {
       success: false,
-      message: 'Unable to process your enquiry at this moment. Please connect directly via WhatsApp or email.',
+      message: 'Enquiry could not be submitted. Please contact us directly by email or WhatsApp.',
     };
   }
 };
