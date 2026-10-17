@@ -1,7 +1,9 @@
+
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import nodemailer from 'nodemailer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,54 +14,71 @@ const isProd = process.env.NODE_ENV === 'production';
 
 app.use(express.json());
 
-// Ensure data directory exists
 const dataDir = path.resolve(__dirname, 'data');
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
+
 const enquiriesFilePath = path.join(dataDir, 'enquiries.json');
 
-// Helper to read enquiries
-const getEnquiries = () => {
-  if (!fs.existsSync(enquiriesFilePath)) {
-    return [];
-  }
+const getEnquiries = (): any[] => {
+  if (!fs.existsSync(enquiriesFilePath)) return [];
+
   try {
-    const raw = fs.readFileSync(enquiriesFilePath, 'utf-8');
-    return JSON.parse(raw);
-  } catch (err) {
-    console.error('Error reading enquiries.json:', err);
+    return JSON.parse(fs.readFileSync(enquiriesFilePath, 'utf-8'));
+  } catch (error) {
+    console.error('Error reading enquiries:', error);
     return [];
   }
 };
 
-// Helper to save enquiries
-const saveEnquiries = (data: unknown[]) => {
+const saveEnquiries = (data: any[]) => {
   fs.writeFileSync(enquiriesFilePath, JSON.stringify(data, null, 2), 'utf-8');
 };
 
-// API: Health check
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  port: Number(process.env.SMTP_PORT || 465),
+  secure: process.env.SMTP_SECURE === 'true',
+  auth: {
+    user: process.env.SMTP_EMAIL,
+    pass: process.env.SMTP_PASSWORD,
+  },
+});
+
 app.get('/api/health', (_req, res) => {
   res.json({
     status: 'ok',
-    timestamp: new Date().toISOString(),
     service: 'Goodfolk Solution API',
+    timestamp: new Date().toISOString(),
   });
 });
 
-// API: Process Enquiry Submissions
-app.post('/api/enquiries', (req, res) => {
-  const { name, email, company, mobile, service, budget, deadline, details } = req.body;
+// Customer enquiry + automatic thank-you email
+app.post('/api/enquiries', async (req, res) => {
+  const {
+    name,
+    email,
+    company,
+    mobile,
+    service,
+    budget,
+    deadline,
+    details,
+  } = req.body;
 
-  // Validation
   if (!name || !email || !company || !mobile || !service || !details) {
     return res.status(400).json({
       success: false,
-      message: 'Missing required fields. Please ensure name, email, company, mobile, service, and project details are provided.',
+      message: 'Please complete all required fields.',
     });
   }
 
-  const enquiryId = `GF-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
+  const enquiryId = `GF-${Date.now().toString(36).toUpperCase()}-${Math.random()
+    .toString(36)
+    .substring(2, 5)
+    .toUpperCase()}`;
+
   const newEnquiry = {
     id: enquiryId,
     name,
@@ -79,24 +98,49 @@ app.post('/api/enquiries', (req, res) => {
   enquiries.unshift(newEnquiry);
   saveEnquiries(enquiries);
 
-  console.log(`[ENQUIRY RECEIVED] ID: ${enquiryId}`);
-  console.log(`Client: ${name} (${company}) | Mobile: ${mobile} | Email: ${email}`);
-  console.log(`Service: ${service} | Budget: ${budget || 'N/A'}`);
-  console.log(`Details: ${details}`);
-  console.log(`Ready for email dispatch to: akshay@goodfolksolution.in\n`);
+  try {
+    await transporter.sendMail({
+      from: `"Goodfolk Solution" <${process.env.SMTP_EMAIL}>`,
+      to: email,
+      replyTo: process.env.SMTP_EMAIL,
+      subject: `Enquiry Received — ${enquiryId}`,
+      text: `Hi ${name},
+
+Thank you for contacting Goodfolk Solution.
+
+We have successfully received your project enquiry.
+
+Enquiry ID: ${enquiryId}
+Company: ${company}
+Service: ${service}
+
+Our team will review your requirements and get back to you within 24 hours.
+
+Please keep your Enquiry ID for future communication.
+
+Regards,
+Goodfolk Solution
+akshay@goodfolksolution.in`,
+    });
+
+    console.log(`Thank-you email sent for ${enquiryId}`);
+  } catch (error) {
+    console.error('Customer email failed:', error);
+  }
 
   return res.json({
     success: true,
-    message: 'Your project enquiry has been received and logged in our system. Akshay and the Goodfolk team will review your specifications within 24 hours.',
+    message: 'Your enquiry has been received.',
     enquiryId,
-    integrationNote: 'Enquiry securely recorded in Goodfolk Lead Vault. Automated inbox delivery ready for akshay@goodfolksolution.in.',
   });
 });
 
-// API: List enquiries (for administrative verification)
+// Admin enquiry list
 app.get('/api/enquiries', (_req, res) => {
-  const enquiries = getEnquiries();
-  res.json({ count: enquiries.length, enquiries });
+  res.json({
+    count: getEnquiries().length,
+    enquiries: getEnquiries(),
+  });
 });
 
 async function startServer() {
@@ -116,7 +160,7 @@ async function startServer() {
   }
 
   app.listen(Number(PORT), '0.0.0.0', () => {
-    console.log(`Goodfolk Solution Server listening on http://0.0.0.0:${PORT}`);
+    console.log(`Goodfolk Solution server running on port ${PORT}`);
   });
 }
 
